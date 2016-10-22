@@ -20,7 +20,7 @@ io.on('connection', function(socket){
         module = modulesPath + '/' + modules[i];
         io.emit('src', module);
         i = (i + 1) % modules.length;
-    }, 1000);
+    }, 5000);
 });
 
 http.listen(3000, function(){
