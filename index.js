@@ -5,12 +5,13 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 
 var modulesPath = 'modules';
+var intervalId = 0;
 
 app.use('/js', express.static(__dirname + '/js'));
 app.use('/modules', express.static(__dirname + '/modules'));
 
 app.get('/', function(req, res){
-	res.sendFile('html/index.html', {root: __dirname })
+	res.sendFile('html/index.html', {root: __dirname });
 });
 
 http.listen(3000, function(){
@@ -18,21 +19,22 @@ http.listen(3000, function(){
 });
 
 io.on('connection', function(socket){
-	
-	startEmittingModules(socket)
-});
-
-io.on('disconnect', function(socket){
-
-	stopEmittingModules(socket)
+    console.log('socket connected');
+	startEmittingModules(socket);
+    socket.on('disconnect', function(socket){
+        console.log('socket disconnected');
+        stopEmittingModules(socket);
+    });
 });
 
 function startEmittingModules(socket)
 {
     modules = fs.readdirSync(modulesPath);
+    console.log(modules);
     i = 0;
-    setInterval(function() {
+    intervalId = setInterval(function() {
         module = modulesPath + '/' + modules[i];
+        console.log(module);
         socket.emit('src', module);
         i = (i + 1) % modules.length;
     }, 1000);
@@ -40,5 +42,5 @@ function startEmittingModules(socket)
 
 function stopEmittingModules(socket)
 {
-	clearInterval()
+	clearInterval(intervalId);
 }
