@@ -8,6 +8,7 @@ var modulesPath = 'modules';
 var intervalId = 0;
 
 app.use('/js', express.static(__dirname + '/js'));
+app.use('/css', express.static(__dirname + '/css'));
 app.use('/modules', express.static(__dirname + '/modules'));
 
 app.get('/', function(req, res){
